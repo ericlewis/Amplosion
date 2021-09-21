@@ -73,7 +73,7 @@ struct AppIconView: View {
                     .padding(.trailing, 5)
                 VStack(alignment: .leading) {
                     Text(status.appIcon.title)
-                        .font(.system(.callout, design: .rounded))
+                        .font(.system(.callout, design: .rounded).weight(.medium))
                         .foregroundColor(.primary)
                     Text(status.appIcon.subtitle)
                         .font(.system(.caption2, design: .rounded))
