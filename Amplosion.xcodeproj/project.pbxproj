@@ -34,7 +34,6 @@
 		F1529A7926C2D9F400A5BC90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1529A7826C2D9F400A5BC90 /* AppDelegate.swift */; };
 		F1529A8326C2D9F400A5BC90 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1529A8226C2D9F400A5BC90 /* SceneDelegate.swift */; };
 		F1529A8826C2D9F400A5BC90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1529A8626C2D9F400A5BC90 /* LaunchScreen.storyboard */; };
-		F1529A8B26C2D9F400A5BC90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1529A8926C2D9F400A5BC90 /* Main.storyboard */; };
 		F1529A9726C2D9F500A5BC90 /* AmplosionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1529A9626C2D9F500A5BC90 /* AmplosionTests.swift */; };
 		F1529AA126C2D9F500A5BC90 /* AmplosionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1529AA026C2D9F500A5BC90 /* AmplosionUITests.swift */; };
 		F1529AA726C2D9F500A5BC90 /* Amplosion Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F1529AA626C2D9F500A5BC90 /* Amplosion Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -162,7 +161,6 @@
 		F1529A7826C2D9F400A5BC90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1529A8226C2D9F400A5BC90 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F1529A8726C2D9F400A5BC90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		F1529A8A26C2D9F400A5BC90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1529A8C26C2D9F500A5BC90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F1529A8D26C2D9F500A5BC90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1529A9226C2D9F500A5BC90 /* AmplosionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmplosionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -347,7 +345,6 @@
 				F11D5ABA26DEB5C400AE86A1 /* Setting.swift */,
 				F11D5ACA26DEB5C500AE86A1 /* Sprites.swift */,
 				F1529A8626C2D9F400A5BC90 /* LaunchScreen.storyboard */,
-				F1529A8926C2D9F400A5BC90 /* Main.storyboard */,
 				F1529A8C26C2D9F500A5BC90 /* Assets.xcassets */,
 				F1529A8D26C2D9F500A5BC90 /* Info.plist */,
 				F1529A7A26C2D9F400A5BC90 /* Resources */,
@@ -593,7 +590,6 @@
 				F18734F826E8FD7A00A61938 /* minus.svg in Resources */,
 				F18734F526E8DA8E00A61938 /* plus.svg in Resources */,
 				F11D5AD426DEB5C600AE86A1 /* unlocked.mp3 in Resources */,
-				F1529A8B26C2D9F400A5BC90 /* Main.storyboard in Resources */,
 				F1529A8826C2D9F400A5BC90 /* LaunchScreen.storyboard in Resources */,
 				F1C5F51E26EBE76700081AF3 /* explainer-light.mp4 in Resources */,
 				F11D5AD926DEB5C600AE86A1 /* bork.mp3 in Resources */,
@@ -759,14 +755,6 @@
 				F1529A8726C2D9F400A5BC90 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		F1529A8926C2D9F400A5BC90 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1529A8A26C2D9F400A5BC90 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
