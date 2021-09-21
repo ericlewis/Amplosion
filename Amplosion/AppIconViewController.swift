@@ -5,123 +5,93 @@
 //  Created by Christian Selig on 2021-08-26.
 //
 
-import UIKit
+import SwiftUI
 
 struct AppIconStatus: Hashable {
     let appIcon: AppIcon
     let isCurrentAppIcon: Bool
 }
 
-extension UIImage {
-    func imageWith(newSize: CGSize) -> UIImage {
-        let image = UIGraphicsImageRenderer(size: newSize).image { _ in
-            draw(in: CGRect(origin: .zero, size: newSize))
-        }
-            
-        return image.withRenderingMode(renderingMode)
+extension AppIconStatus: Identifiable {
+    var id: AppIcon {
+        appIcon
     }
 }
 
-class AppIconViewController: IndentedTitleViewController, UITableViewDelegate {
-    let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    
-    // We can't use the AppIcon enum directly, as enums are static and computed properties on them won't be factored into the diffable data source calculations, so have a pseudo wrapper
-    lazy var appIconStatuses: [AppIconStatus] = createAppIconStatuses()
-    
-    lazy var dataSource: AppIconDataSource = {
-        let dataSource = AppIconDataSource(tableView: tableView) { tableView, indexPath, appIconStatus in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SettingCell", for: indexPath)
-            
-            var contentConfig = UIListContentConfiguration.subtitleCell()
-            
-            contentConfig.text = appIconStatus.appIcon.title
-            contentConfig.textProperties.font = contentConfig.textProperties.font.rounded()
-            contentConfig.textToSecondaryTextVerticalPadding = 3.0
-            
-            contentConfig.image = appIconStatus.appIcon.thumbnail.imageWith(newSize: CGSize(width: 68.0, height: 68.0))
-            
-            // Add a bit of extra vertical height
-            contentConfig.imageProperties.reservedLayoutSize = CGSize(width: 68.0, height: 96.0)
-            
-            contentConfig.secondaryText = appIconStatus.appIcon.subtitle
-            contentConfig.secondaryTextProperties.color = .secondaryLabel
-            
-            cell.contentConfiguration = contentConfig
-            
-            cell.accessoryType = appIconStatus.isCurrentAppIcon ? .checkmark : .none
-            
-            cell.accessibilityHint = "Changes home screen app icon."
-            cell.accessibilityLabel = appIconStatus.appIcon.accessibilityDescription
-            
-            return cell
-        }
-        
-        return dataSource
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        navigationItem.title = "App Icon"
-        
-        tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingCell")
-        tableView.cellLayoutMarginsFollowReadableWidth = true
-        view.addSubview(tableView)
-        
-        refreshAppIcons()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        tableView.frame = view.bounds
-    }
-    
-    private func createAppIconStatuses() -> [AppIconStatus] {
-        var appIconStatuses: [AppIconStatus] = []
-        
-        for unlockedIcon in AppIcon.unlockedIcons {
-            let status = AppIconStatus(appIcon: unlockedIcon, isCurrentAppIcon: AppIcon.currentAppIcon == unlockedIcon)
-            appIconStatuses.append(status)
-        }
-        
-        return appIconStatuses
-    }
-    
-    private func refreshAppIcons() {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, AppIconStatus>()
-        
-        snapshot.appendSections([0])
-        snapshot.appendItems(appIconStatuses, toSection: 0)
-        
-        dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        guard let appIconStatus = dataSource.itemIdentifier(for: indexPath) else { return }
+extension String: Identifiable {
+    public var id: Self { self }
+}
 
-        let alternateIconName: String? = appIconStatus.appIcon == .default ? nil : appIconStatus.appIcon.rawValue
-        
-        UIApplication.shared.setAlternateIconName(alternateIconName) { [weak self] error in
-            guard let strongSelf = self else { return }
-            
-            if let error = error {
-                let alertController = UIAlertController(title: "Error Setting Icon :(", message: error.localizedDescription, preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                strongSelf.present(alertController, animated: true, completion: nil)
-            } else {
-                strongSelf.appIconStatuses = strongSelf.createAppIconStatuses()
-                strongSelf.refreshAppIcons()
+class AppIconViewController: UIHostingController<AppIconView> {
+    convenience init() {
+        self.init(rootView: AppIconView())
+        title = "App Icon"
+    }
+}
+
+struct AppIconView: View {
+    @State
+    private var appIconStatuses: [AppIconStatus] = createAppIconStatuses()
+
+    @State
+    private var errorMessage: String?
+
+    var body: some View {
+        List {
+            Section {
+                ForEach(appIconStatuses) { status in
+                    makeCell(for: status)
+                }
+            } footer: {
+                Text("Lightning ⚡️ icons done by Matthew Skiles, and doggy 🐶 icons done by Lux")
+                    .font(.system(.caption2, design: .rounded))
             }
         }
+        .alert(item: $errorMessage) { errorMessage in
+            Alert(title: Text("Error Setting Icon :("), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+        }
     }
-}
 
-class AppIconDataSource: UITableViewDiffableDataSource<Int, AppIconStatus> {
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return "Lightning ⚡️ icons done by Matthew Skiles, and doggy 🐶 icons done by Lux"
+    private func makeCell(for status: AppIconStatus) -> some View {
+        Button {
+            let alternateIconName: String? = status.appIcon == .default ? nil : status.appIcon.rawValue
+
+            UIApplication.shared.setAlternateIconName(alternateIconName) { error in
+                if let error = error {
+                    errorMessage = error.localizedDescription
+                } else {
+                    withAnimation {
+                        appIconStatuses = Self.createAppIconStatuses()
+                    }
+                }
+            }
+        } label: {
+            HStack {
+                Image(uiImage: status.appIcon.thumbnail)
+                    .resizable()
+                    .frame(width: 68, height: 68)
+                    .padding(.trailing, 5)
+                VStack(alignment: .leading) {
+                    Text(status.appIcon.title)
+                        .font(.system(.callout, design: .rounded))
+                        .foregroundColor(.primary)
+                    Text(status.appIcon.subtitle)
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                if status.isCurrentAppIcon {
+                    Image(systemName: "checkmark")
+                        .font(.headline)
+                }
+            }
+            .padding(.vertical, 10)
+        }
+    }
+
+    private static func createAppIconStatuses() -> [AppIconStatus] {
+        AppIcon.unlockedIcons.map { unlockedIcon in
+            AppIconStatus(appIcon: unlockedIcon, isCurrentAppIcon: AppIcon.currentAppIcon == unlockedIcon)
+        }
     }
 }
