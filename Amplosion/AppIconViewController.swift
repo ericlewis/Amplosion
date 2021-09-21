@@ -87,6 +87,8 @@ struct AppIconView: View {
             }
             .padding(.vertical, 10)
         }
+        .accessibilityHint(Text("Changes home screen app icon."))
+        .accessibilityLabel(Text(status.appIcon.accessibilityDescription))
     }
 
     private static func createAppIconStatuses() -> [AppIconStatus] {
