@@ -318,6 +318,8 @@ class DogPark: UIControl {
     }
     
     func bork() {
+        guard !isPlayingOutUserInteraction else { return }
+
         isPlayingOutUserInteraction = true
         dirtWasSelected = false
         startDirtExpirationCountdown(seconds: 2)
